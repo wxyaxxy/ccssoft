@@ -34,6 +34,7 @@ if pid != 0:
     print("kill complete")
     #live
     os.chdir("/home/pi/ccssoft")
+    os.system("sudo cp firmware/"+firmware_file+" runtime/"+firmware_file)
     os.system("sudo python3 runtime/"+firmware_file+"&")
 else:
     print("no that process")

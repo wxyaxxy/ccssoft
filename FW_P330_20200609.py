@@ -545,6 +545,7 @@ def on_topic_message(topic, payload, qos, userdata):
             if os.path.exists("image/" + mission_num) is False:
                 os.mkdir("image/" + mission_num)
             HeartBeat['mission_id'] = mission_num
+            photoNum=0
             iot_reply_ok('MISSION')
         except Exception as e:
             info="MISSION error" +str(e)
@@ -707,7 +708,7 @@ def post_image():
     logger.info("post_image thread start")
     while flag_start == 1:
         try:
-            while os.path.exists("image/" + mission_num + "/" + image_name) is False or image_name.split("_")[-1].split(".")[0]>=photoNum:
+            while os.path.exists("image/" + mission_num + "/" + image_name) is False or int(image_name.split("_")[-1].split(".")[0])>=photoNum:
                 logger.info("waiting for capture image " + image_name)
                 if flag_start == 0:
                     break
