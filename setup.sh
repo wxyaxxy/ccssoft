@@ -53,6 +53,12 @@ mkdir /ccssoft/firmware
 #在etc/udev/rules.d/找到xxx.rules文件，在最后增加以下一行
 #KERNEL=="ttyUSB*", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="7523", MODE:="0777", SYMLINK+="feikong_uart"
 
+#没有屏幕的时候，外置sd卡不会自动挂载，需要修改配置文件让其自动挂载
+#有屏幕的时候，外置sd卡会自动挂载为/media/pi/SDCARD
+#修改/etc/fstab文件，最后加入
+#/dev/sda1 /media/pi/SDCARD vfat defaults 0 0
+#重启，外置sd卡会自动挂载
+
 #测试一下，是否能跑起来
 sudo python3 start.py
 
