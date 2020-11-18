@@ -663,7 +663,7 @@ def heartBeatRecord():
                 logger.info("umount sd ")
                 HeartBeat['SD'] = "SD未插入"
             else:
-                HeartBeat['SD'] = "SD未插入"
+                HeartBeat['SD'] = "SD未插进"
         time.sleep(1)
 
 # 定时线程
