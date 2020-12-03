@@ -81,54 +81,127 @@ def read_init(whichserver):
     global image_luJing
     global image_hostName
     global mission_num
-    product_key = "a1DgsgxAjXK"  # 默认参数
-    device_name = "device1"  # 每个设备写死的参数
-    device_secret = "nXCVzfnyht4veJaaGKqv3j4lfzOBIMv6"  # 默认参数
-    product_secret = ""
     try:
         with open('initial.ini','r') as f:
             initdata=f.read()
         logger.info("init data open success")
         init_dict = json.loads(initdata)
         try:
-            product_key = init_dict[whichserver]['product_key']
+            if whichserver in init_dict.keys():
+                product_key = init_dict[whichserver]['product_key']
+                device_secret = init_dict[whichserver]['device_secret']
+                device_name = init_dict[whichserver]['device_name']
+                logger.info("三元组读取成功")
+            else:
+                init_dict[whichserver] = {}
+                init_dict[whichserver]['product_key']="a1xtmI21EQo"
+                init_dict[whichserver]['device_secret']="ae62c0826c5c157cf46a8e9bd4135a55"
+                init_dict[whichserver]['device_name']="55551111"
+                product_key = init_dict[whichserver]['product_key']
+                device_secret = init_dict[whichserver]['device_secret']
+                device_name = init_dict[whichserver]['device_name']
+                init_json = json.dumps(init_dict)
+                with open('initial.ini', 'w') as f:
+                    f.write(init_json)
+                logger.info(whichserver+"三元组不在initial中,写入默认值")
         except:
-            pass
+            logger.info("三元祖读取失败")
+
         try:
-            product_secret = init_dict[whichserver]['product_secret']
+            if 'image_post' in init_dict.keys():
+                renzheng_secret=init_dict['image_post']['passwd']
+                renzheng_name=init_dict['image_post']['user']
+                image_hostName=init_dict['image_post']['hostName']
+                image_luJing=init_dict['image_post']['luJing']
+                HeartBeat['image_url']=image_hostName+image_luJing
+                logger.info("图传地址读取成功," + image_hostName + image_luJing)
+            else:
+                init_dict['image_post']={}
+                init_dict['image_post']['passwd'] = "123456"
+                init_dict['image_post']['user'] = "uav"
+                init_dict['image_post']['hostName'] = "http://39.99.240.145:8080/"
+                init_dict['image_post']['luJing'] = "filemicroservice/imageRecognition"
+                renzheng_secret = init_dict['image_post']['passwd']
+                renzheng_name = init_dict['image_post']['user']
+                image_hostName = init_dict['image_post']['hostName']
+                image_luJing = init_dict['image_post']['luJing']
+                HeartBeat['image_url'] = image_hostName + image_luJing
+                init_json = json.dumps(init_dict)
+                with open('initial.ini', 'w') as f:
+                    f.write(init_json)
+                logger.info("image_post不在initial中,写入默认值")
         except:
-            pass
+            logger.info("图传地址读取失败")
         try:
-            device_secret = init_dict[whichserver]['device_secret']
+            if 'mission_num' in init_dict.keys():
+                mission_num=init_dict['mission_num']
+                HeartBeat['mission_id']=mission_num
+                logger.info("任务号读取成功为"+mission_num)
+            else:
+                init_dict['mission_num']="2020120304"
+                mission_num = init_dict['mission_num']
+                HeartBeat['mission_id'] = mission_num
+                init_json = json.dumps(init_dict)
+                with open('initial.ini', 'w') as f:
+                    f.write(init_json)
+                logger.info("mission_num不在initial中,写入默认值")
         except:
-            pass
+            logger.info("任务号读取失败")
         try:
-            device_name=init_dict[whichserver]['device_name']
+            if 'Upload_mode' in init_dict.keys():
+                HeartBeat['Upload_mode'] = init_dict['Upload_mode']
+                logger.info("Upload_mode读取成功," + str(HeartBeat['Upload_mode']))
+            else:
+                init_dict['Upload_mode'] = 1
+                HeartBeat['Upload_mode'] = init_dict['Upload_mode']
+                init_json = json.dumps(init_dict)
+                with open('initial.ini', 'w') as f:
+                    f.write(init_json)
+                logger.info("Upload_mode不在initial中,写入默认值")
         except:
-            pass
+            logger.info("Upload_mode读取失败")
         try:
-            renzheng_secret=init_dict['image_post']['passwd']
-            renzheng_name=init_dict['image_post']['user']
-            image_hostName=init_dict['image_post']['hostName']
-            image_luJing=init_dict['image_post']['luJing']
-            HeartBeat['image_url']=image_hostName+image_luJing
-            mission_num=init_dict['mission_num']
-            HeartBeat['mission_id']=mission_num
-            logger.info("read image url succes")
-            logger.info("image_url is " + image_hostName + image_luJing)
-            HeartBeat['Upload_mode']=init_dict['Upload_mode']
-            HeartBeat['ShutterTime']=init_dict['ShutterTime']
-            HeartBeat['Distance']=init_dict['Distance']
-            HeartBeat['rtmp_url']=init_dict['rtmp_url']
-            logger.info("current mode is "+str(HeartBeat['Upload_mode']))
-            logger.info("ShutterTime is "+str(HeartBeat['ShutterTime']))
-            logger.info("Distance is "+str(HeartBeat['Distance']))
-            logger.info("rtmp_url is "+HeartBeat['rtmp_url'])
+            if 'ShutterTime' in init_dict.keys():
+                HeartBeat['ShutterTime'] = init_dict['ShutterTime']
+                logger.info("ShutterTime读取成功," + str(HeartBeat['ShutterTime']))
+            else:
+                init_dict['ShutterTime'] = 5
+                HeartBeat['ShutterTime'] = init_dict['ShutterTime']
+                init_json = json.dumps(init_dict)
+                with open('initial.ini', 'w') as f:
+                    f.write(init_json)
+                logger.info("ShutterTime不在initial中,写入默认值")
         except:
-            logger.info("read init date error")
+            logger.info("ShutterTime读取失败")
+        try:
+            if 'Distance' in init_dict.keys():
+                HeartBeat['Distance'] = init_dict['Distance']
+                logger.info("Distance读取成功," + str(HeartBeat['Distance']))
+            else:
+                init_dict['Distance'] = 100
+                HeartBeat['Distance'] = init_dict['Distance']
+                init_json = json.dumps(init_dict)
+                with open('initial.ini', 'w') as f:
+                    f.write(init_json)
+                logger.info("Distance不在initial中,写入默认值")
+        except:
+            logger.info("Distance读取失败")
+        try:
+            if 'rtmp_url' in init_dict.keys():
+                HeartBeat['rtmp_url'] = init_dict['rtmp_url']
+                logger.info("rtmp_url读取成功," + HeartBeat['rtmp_url'])
+            else:
+                init_dict['rtmp_url'] = 'rtmp://push.uavlive.cn/ccssoft/test'
+                HeartBeat['rtmp_url'] = init_dict['rtmp_url']
+                init_json = json.dumps(init_dict)
+                with open('initial.ini', 'w') as f:
+                    f.write(init_json)
+                logger.info("rtmp_url不在initial中,写入默认值")
+        except:
+            logger.info("rtmp_url读取失败")
     except:
-        logger.info("use default init data")
-    return product_key,product_secret,device_secret,device_name
+        logger.info("读取初始化文件失败")
+    return product_key,device_secret,device_name
 
 
 def duTodufenmiao(du):
@@ -1203,7 +1276,7 @@ if __name__ == "__main__":
     # whichserver = sys.argv[1] #如果从start.py启动
     whichserver = 'hejing'
     #whichserver = 'wangbo'
-    pd_key,pd_secret,dv_secret,dv_name= read_init(whichserver)
+    pd_key,dv_secret,dv_name= read_init(whichserver)
     logger.info("current mission num is "+str(mission_num))
     get_photoNum(mission_num)
     #根据任务号去找目录下照片的数量
@@ -1212,7 +1285,6 @@ if __name__ == "__main__":
         product_key=pd_key,
         device_name=dv_name,
         device_secret=dv_secret,
-        product_secret=pd_secret
     )
     lk.config_mqtt(port=1883, protocol="MQTTv311", transport="TCP",
                 secure="TLS", keep_alive=60, clean_session=False,
