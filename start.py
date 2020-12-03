@@ -10,6 +10,6 @@ if __name__ == "__main__":
         file_json = f.read()
         file_dict = json.loads(file_json)
         runfile = file_dict['runfile']
-        print(runfile)
+        # print(runfile)
         os.system('cp firmware/'+runfile+' runtime/')
         os.system('sudo python3 runtime/'+runfile)
