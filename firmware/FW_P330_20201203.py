@@ -485,6 +485,7 @@ def heartBeatSend():
                     flagHeartBeatSendSuccess = 0
                 except Exception as e:
                     logger.info("heartBeatSend:"+str(e))
+                    time.sleep(1)
         else:
             time.sleep(1)
 
